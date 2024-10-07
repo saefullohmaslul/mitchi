@@ -1,3 +1,16 @@
+---
+title: Mitchi
+emoji: 🐢
+colorFrom: blue
+colorTo: blue
+sdk: gradio
+sdk_version: 4.44.1
+app_file: app.py
+pinned: false
+license: mit
+short_description: Smart Research Discussion Chatbot
+---
+
 # Mitchi: Smart Research Discussion Chatbot
 
 **Mitchi** is a smart chatbot designed to facilitate research discussions by retrieving and summarizing scientific papers in real-time. By leveraging LLaMA and the arXiv API, Mitchi provides an intuitive way to explore research topics and get insightful paper recommendations, helping researchers dive deep into academic subjects.
