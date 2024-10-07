@@ -5,10 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python Debugger: Popbot",
+            "name": "Python Debugger: Mitchi",
             "type": "debugpy",
             "request": "launch",
-            "program": "main.py",
+            "program": "app.py",
             "console": "integratedTerminal"
         }
     ]

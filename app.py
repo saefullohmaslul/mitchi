@@ -1,24 +1,16 @@
-import logging
+from typing import AsyncGenerator, List
 
 import gradio as gr
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+from src.modules.bot import chatbot
 
-app = FastAPI()
+load_dotenv()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# from arxiv import Client, Search, SortCriterion
 
 
-def predict(message, history):
+async def predict(message: str, history: List) -> AsyncGenerator:
     """Predict the next message in the conversation.
 
     Args:
@@ -28,24 +20,30 @@ def predict(message, history):
     Yields:
         _type_: predicted message
     """
-    history_openai_format = []
+    # client = Client(page_size=10)
+    # search = Search(query=message, max_results=10, sort_by=SortCriterion.SubmittedDate)
+
+    # research = []
+    # for r in client.results(search):
+    #     research.append(
+    #         {
+    #             "title": r.title,
+    #             "summary": r.summary,
+    #             "authors": [{"name": a.name} for a in r.authors],
+    #             "doi": r.doi,
+    #             "url": r.entry_id,
+    #         }
+    #     )
+
+    # print(research)
+
+    history_message = []
     for human, assistant in history:
-        history_openai_format.append({"role": "user", "content": human})
-        history_openai_format.append({"role": "assistant", "content": assistant})
-    history_openai_format.append({"role": "user", "content": message})
+        history_message.append({"role": "user", "content": human})
+        history_message.append({"role": "ai", "content": assistant})
 
-    # response = client.chat.completions.create(
-    # model="gpt-3.5-turbo",
-    # messages=history_openai_format,
-    # temperature=1.0,
-    # stream=True,
-    # )
-
-    partial_message = "Halo"
-    # for chunk in response:
-    # if chunk.choices[0].delta.content is not None:
-    # partial_message = partial_message + chunk.choices[0].delta.content
-    yield partial_message
+    async for response in chatbot(message=message, history=history_message):
+        yield response
 
 
 if __name__ == "__main__":
