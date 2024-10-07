@@ -1,0 +1,39 @@
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.5.0
+  hooks:
+  - id: check-yaml
+  - id: end-of-file-fixer
+  - id: trailing-whitespace
+- repo: local
+  hooks:
+  - id: autoflake
+    entry: poetry run poe autoflake
+    language: system
+    name: autoflake
+    types: [python]
+    args: [--in-place, --remove-unused-variables, --remove-all-unused-imports]
+- repo: local
+  hooks:
+  - id: isort
+    entry: poetry run poe isort
+    language: system
+    name: isort
+    types: [python]
+    args: [--profile=black]
+- repo: local
+  hooks:
+  - id: black
+    entry: poetry run poe black
+    language: system
+    name: black
+    types: [python]
+    args: [ --line-length=150, --target-version=py310 ]
+- repo: local
+  hooks:
+  - id: pylint
+    entry: poetry run poe pylint
+    name: pylint
+    language: system
+    types: [python]
+    args: [ --ignore-patterns=venv --max-line-length=150 ]
