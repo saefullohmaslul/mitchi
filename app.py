@@ -7,36 +7,17 @@ from src.modules.bot import chatbot
 
 load_dotenv()
 
-# from arxiv import Client, Search, SortCriterion
-
 
 async def predict(message: str, history: List) -> AsyncGenerator:
     """Predict the next message in the conversation.
 
     Args:
-        message (_type_): message to predict
-        history (_type_): conversation history
+        message (str): message to predict
+        history (List): conversation history
 
     Yields:
-        _type_: predicted message
+        AsyncGenerator: predicted message
     """
-    # client = Client(page_size=10)
-    # search = Search(query=message, max_results=10, sort_by=SortCriterion.SubmittedDate)
-
-    # research = []
-    # for r in client.results(search):
-    #     research.append(
-    #         {
-    #             "title": r.title,
-    #             "summary": r.summary,
-    #             "authors": [{"name": a.name} for a in r.authors],
-    #             "doi": r.doi,
-    #             "url": r.entry_id,
-    #         }
-    #     )
-
-    # print(research)
-
     history_message = []
     for human, assistant in history:
         history_message.append({"role": "user", "content": human})

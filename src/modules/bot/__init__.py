@@ -5,7 +5,7 @@ from src.modules.bot.chains import full_chain
 
 async def chatbot(message: str, history: List) -> AsyncGenerator:
     try:
-        chunks = ""
+        chunks: str = ""
         async for response in full_chain().astream(
             input={
                 "message": message,
