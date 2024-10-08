@@ -19,6 +19,7 @@ from src.modules.bot.prompts.ethical_considerations_prompt import (
 from src.modules.bot.prompts.general_academic_inquiry_prompt import (
     general_academic_inquiry_prompt,
 )
+from src.modules.bot.prompts.greeting_prompt import greeting_prompt
 from src.modules.bot.prompts.intent_classifier_prompt import intent_classifier_prompt
 from src.modules.bot.prompts.methodology_guidance_prompt import (
     methodology_guidance_prompt,
@@ -283,6 +284,25 @@ def general_academic_inquiry_chain() -> RunnableSerializable:
             "history": lambda x: x["history"],
         }
         | general_academic_inquiry_prompt()
+        | llm
+        | StrOutputParser()
+    )
+
+
+def greeting_chain() -> RunnableSerializable:
+    """Create a chain for the greeting intent.
+
+    Returns:
+        RunnableSerializable: Chain for the greeting intent.
+    """
+    llm = ChatGroq(model="llama-3.1-70b-versatile", temperature=0.3, stop_sequences=None)
+
+    return (
+        {
+            "message": lambda x: x["message"],
+            "history": lambda x: x["history"],
+        }
+        | greeting_prompt()
         | llm
         | StrOutputParser()
     )
