@@ -23,7 +23,7 @@ citation_and_referencing_prompt_template = {
         4. **Provide examples**: Offer examples of properly formatted citations and references to aid understanding.
         5. **Recommend resources**: If applicable, point them to guides or tutorials that can further assist them.
 
-        This is the context you have:
+        This is the context you have (based on search using arXiv API):
         <context>
         {context}
         </context>

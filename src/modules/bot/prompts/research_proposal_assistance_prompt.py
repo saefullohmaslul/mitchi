@@ -23,7 +23,7 @@ research_proposal_assistance_prompt_template = {
         4. **Offer examples and templates**: Provide examples or outlines to help the user understand how to structure their proposal.
         5. **Recommend resources**: If applicable, suggest relevant research papers from arXiv to support their proposal.
 
-        This is the context you have:
+        This is the context you have (based on search using arXiv API):
         <context>
         {context}
         </context>

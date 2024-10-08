@@ -22,7 +22,7 @@ methodology_guidance_prompt_template = {
         3. **Explain the methodologies**: Provide brief explanations of each suggested method and why it is appropriate for their research.
         4. **Offer additional resources**: If applicable, recommend related research papers from arXiv that utilize these methodologies to support their understanding.
 
-        This is the context you have:
+        This is the context you have (based on search using arXiv API):
         <context>
         {context}
         </context>

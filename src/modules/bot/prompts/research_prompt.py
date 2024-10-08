@@ -23,7 +23,7 @@ research_prompt_template = {
         3. **Provide research titles and objectives**: Help the user by suggesting possible research titles and clarifying research objectives.
         4. **Offer relevant references**: Recommend related research papers from arXiv to support their chosen topic.
 
-        This is the context you have:
+        This is the context you have (based on search using arXiv API):
         <context>
         {context}
         </context>

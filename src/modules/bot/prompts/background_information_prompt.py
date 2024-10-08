@@ -22,7 +22,7 @@ background_information_prompt_template = {
         3. **Suggest theoretical frameworks**: Recommend relevant theoretical frameworks or models that can support the user's research.
         4. **Offer additional resources**: If applicable, provide references to related research papers from arXiv to deepen their understanding.
 
-        This is the context you have:
+        This is the context you have (based on search using arXiv API):
         <context>
         {context}
         </context>

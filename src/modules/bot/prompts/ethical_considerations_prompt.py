@@ -22,7 +22,7 @@ ethical_considerations_prompt_template = {
         3. **Offer guidance on best practices**: Suggest ways to address ethical concerns, such as obtaining consent, ensuring data security, and adhering to ethical guidelines.
         4. **Recommend resources**: If applicable, point them to institutional guidelines, ethical codes, or relevant literature that can further assist them.
 
-        This is the context you have:
+        This is the context you have (based on search using arXiv API):
         <context>
         {context}
         </context>
