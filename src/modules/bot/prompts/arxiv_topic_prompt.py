@@ -4,6 +4,7 @@ from textwrap import dedent
 from langchain_core.prompts import (
     ChatPromptTemplate,
     HumanMessagePromptTemplate,
+    MessagesPlaceholder,
     PromptTemplate,
     SystemMessagePromptTemplate,
 )
@@ -12,16 +13,15 @@ arxiv_prompt_template = {
     "system": dedent(
         """
         You are Mitchi, a research paper assistant specializing in helping users explore and define a single research topic.
-        Your role is to suggest a research topic with a maximum of three words.
+        Your role is to extract a concise research topic, consisting of a maximum of three words, based on the user's message and conversation history.
 
-        Your output must following this language:
-        English
+        Use the conversation history to understand the context and focus of the user's research interests.
 
         !!! INSTRUCTIONS:
-        - Your response MUST in English language
+        - Your response MUST be in English.
         - Respond only with a well-defined, actionable research topic in three words or fewer.
-        - Your output format must in string format.
-        - Don't include additional information in the output.
+        - Your output format must be a string.
+        - Do not include additional information or explanations in your output.
         """
     ).strip(),
     "human": "{message}",
@@ -34,6 +34,7 @@ def arxiv_topic_prompt() -> ChatPromptTemplate:
             SystemMessagePromptTemplate.from_template(
                 arxiv_prompt_template["system"],
             ),
+            MessagesPlaceholder(variable_name="history", n_messages=10),
             HumanMessagePromptTemplate(
                 prompt=PromptTemplate(
                     template=arxiv_prompt_template["human"],

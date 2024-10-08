@@ -85,6 +85,7 @@ def arxiv_topic_chain() -> RunnableSerializable:
     return (
         {
             "message": lambda x: x["message"],
+            "history": lambda x: x["history"],
         }
         | arxiv_topic_prompt()
         | llm
