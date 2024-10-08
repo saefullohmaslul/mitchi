@@ -4,7 +4,6 @@ from textwrap import dedent
 from langchain_core.prompts import (
     ChatPromptTemplate,
     HumanMessagePromptTemplate,
-    MessagesPlaceholder,
     PromptTemplate,
     SystemMessagePromptTemplate,
 )
@@ -36,7 +35,6 @@ def arxiv_topic_prompt() -> ChatPromptTemplate:
             SystemMessagePromptTemplate.from_template(
                 arxiv_prompt_template["system"],
             ),
-            MessagesPlaceholder(variable_name="history", n_messages=10),
             HumanMessagePromptTemplate(
                 prompt=PromptTemplate(
                     template=arxiv_prompt_template["human"],

@@ -22,11 +22,6 @@ research_problem_clarification_prompt_template = {
         3. **Provide guidance on framing the research problem**: Offer advice on how to effectively articulate the research problem or gap in existing knowledge.
         4. **Offer examples and references**: If applicable, provide examples or suggest related research papers from arXiv to support their understanding.
 
-        This is the context you have:
-        <context>
-        {context}
-        </context>
-
         !!! INSTRUCTIONS:
         1. Maintain a conversational, friendly, and helpful tone while focusing on assisting the user.
         2. Ensure that your suggestions are clear, concise, and tailored to the user's level of understanding.
@@ -43,12 +38,7 @@ research_problem_clarification_prompt_template = {
 def research_problem_clarification_prompt() -> ChatPromptTemplate:
     return ChatPromptTemplate.from_messages(
         messages=[
-            SystemMessagePromptTemplate(
-                prompt=PromptTemplate(
-                    template=research_problem_clarification_prompt_template["system"],
-                    input_variables=["context"],
-                ),
-            ),
+            SystemMessagePromptTemplate.from_template(research_problem_clarification_prompt_template["system"]),
             MessagesPlaceholder(variable_name="history", n_messages=10),
             HumanMessagePromptTemplate(
                 prompt=PromptTemplate(

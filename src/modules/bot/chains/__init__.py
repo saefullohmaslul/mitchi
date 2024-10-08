@@ -81,12 +81,11 @@ def arxiv_topic_chain() -> RunnableSerializable:
     Returns:
         RunnableSerializable: Chain for the research topic intent.
     """
-    llm = ChatGroq(model="llama-3.1-70b-versatile", temperature=0.3, stop_sequences=["\n"])
+    llm = ChatGroq(model="llama-3.1-8b-instant", temperature=0.3, stop_sequences=["\n"])
 
     return (
         {
             "message": lambda x: x["message"],
-            "history": lambda x: x["history"],
         }
         | arxiv_topic_prompt()
         | llm
@@ -146,7 +145,6 @@ def research_problem_clarification_chain() -> RunnableSerializable:
         {
             "message": lambda x: x["message"],
             "history": lambda x: x["history"],
-            "context": arxiv_topic_chain() | get_research_paper,
         }
         | research_problem_clarification_prompt()
         | llm
