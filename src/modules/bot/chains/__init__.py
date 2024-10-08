@@ -7,6 +7,9 @@ from src.modules.bot.prompts.arxiv_topic_prompt import arxiv_topic_prompt
 from src.modules.bot.prompts.background_information_prompt import (
     background_information_prompt,
 )
+from src.modules.bot.prompts.citation_and_referencing_prompt import (
+    citation_and_referencing_prompt,
+)
 from src.modules.bot.prompts.data_analysis_advice_prompt import (
     data_analysis_advice_prompt,
 )
@@ -200,6 +203,26 @@ def data_analysis_advice_chain() -> RunnableSerializable:
     )
 
 
+def citation_and_referencing_chain() -> RunnableSerializable:
+    """Create a chain for the citation and referencing intent.
+
+    Returns:
+        RunnableSerializable: Chain for the citation and referencing intent.
+    """
+    llm = ChatGroq(model="llama-3.1-70b-versatile", temperature=0.3, stop_sequences=None)
+
+    return (
+        {
+            "message": lambda x: x["message"],
+            "history": lambda x: x["history"],
+            "context": research_topic_chain() | get_research_paper,
+        }
+        | citation_and_referencing_prompt()
+        | llm
+        | StrOutputParser()
+    )
+
+
 def intent_routing(info: dict) -> RunnableSerializable:
     """Route the intent to the appropriate chain.
 
@@ -219,6 +242,7 @@ def intent_routing(info: dict) -> RunnableSerializable:
         "background_information": background_information_chain,
         "research_proposal_assistance": research_proposal_assistance_chain,
         "data_analysis_advice": data_analysis_advice_chain,
+        "citation_and_referencing": citation_and_referencing_chain,
     }
 
     return intent_map.get(intent, other_chain)()
