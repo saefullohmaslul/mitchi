@@ -8,7 +8,7 @@ from langchain_core.prompts import (
     SystemMessagePromptTemplate,
 )
 
-research_prompt_template = {
+arxiv_prompt_template = {
     "system": dedent(
         """
         You are Mitchi, a research paper assistant specializing in helping users explore and define a single research topic.
@@ -28,15 +28,15 @@ research_prompt_template = {
 }
 
 
-def research_topic_prompt() -> ChatPromptTemplate:
+def arxiv_topic_prompt() -> ChatPromptTemplate:
     return ChatPromptTemplate.from_messages(
         messages=[
             SystemMessagePromptTemplate.from_template(
-                research_prompt_template["system"],
+                arxiv_prompt_template["system"],
             ),
             HumanMessagePromptTemplate(
                 prompt=PromptTemplate(
-                    template=research_prompt_template["human"],
+                    template=arxiv_prompt_template["human"],
                     input_variables=["message"],
                 )
             ),

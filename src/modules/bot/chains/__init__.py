@@ -3,10 +3,13 @@ from langchain_core.runnables import RunnableLambda, RunnableSerializable
 from langchain_groq import ChatGroq
 
 from src.modules.bot.parsers.chatbot_parser import string_parser
+from src.modules.bot.prompts.arxiv_topic_prompt import arxiv_topic_prompt
 from src.modules.bot.prompts.intent_classifier_prompt import intent_classifier_prompt
+from src.modules.bot.prompts.methodology_guidance_prompt import (
+    methodology_guidance_prompt,
+)
 from src.modules.bot.prompts.other_prompt import other_prompt
 from src.modules.bot.prompts.research_prompt import research_prompt
-from src.modules.bot.prompts.research_topic_prompt import research_topic_prompt
 from src.modules.bot.tools.arxiv_tool import get_research_paper
 
 
@@ -47,7 +50,7 @@ def other_chain() -> RunnableSerializable:
     )
 
 
-def research_topic_chain() -> RunnableSerializable:
+def arxiv_topic_chain() -> RunnableSerializable:
     """Create a chain for the research topic intent.
 
     Returns:
@@ -59,13 +62,13 @@ def research_topic_chain() -> RunnableSerializable:
         {
             "message": lambda x: x["message"],
         }
-        | research_topic_prompt()
+        | arxiv_topic_prompt()
         | llm
         | string_parser
     )
 
 
-def research_chain() -> RunnableSerializable:
+def research_topic_chain() -> RunnableSerializable:
     """Create a chain for the research intent.
 
     Returns:
@@ -77,9 +80,29 @@ def research_chain() -> RunnableSerializable:
         {
             "message": lambda x: x["message"],
             "history": lambda x: x["history"],
-            "context": research_topic_chain() | get_research_paper,
+            "context": arxiv_topic_chain() | get_research_paper,
         }
         | research_prompt()
+        | llm
+        | StrOutputParser()
+    )
+
+
+def methodology_guidance_chain() -> RunnableSerializable:
+    """Create a chain for the methodology guidance intent.
+
+    Returns:
+        RunnableSerializable: Chain for the methodology guidance intent.
+    """
+    llm = ChatGroq(model="llama-3.1-70b-versatile", temperature=0.3, stop_sequences=None)
+
+    return (
+        {
+            "message": lambda x: x["message"],
+            "history": lambda x: x["history"],
+            "context": research_topic_chain() | get_research_paper,
+        }
+        | methodology_guidance_prompt()
         | llm
         | StrOutputParser()
     )
@@ -98,7 +121,8 @@ def intent_routing(info: dict) -> RunnableSerializable:
 
     intent_map = {
         "other": other_chain,
-        "research": research_chain,
+        "research_topic": research_topic_chain,
+        "methodology_guidance": methodology_guidance_chain,
     }
 
     return intent_map.get(intent, other_chain)()

@@ -6,7 +6,7 @@ colorTo: blue
 sdk: gradio
 sdk_version: 4.44.1
 app_file: app.py
-pinned: false
+pinned: true
 license: mit
 short_description: Smart Research Discussion Chatbot
 ---
