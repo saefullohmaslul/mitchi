@@ -17,6 +17,8 @@ arxiv_prompt_template = {
 
         Use the conversation history to understand the context and focus of the user's research interests.
 
+        Your output MUST following this language: English
+
         !!! INSTRUCTIONS:
         - Your response MUST be in English.
         - Respond only with a well-defined, actionable research topic in three words or fewer.
