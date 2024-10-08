@@ -4,6 +4,9 @@ from langchain_groq import ChatGroq
 
 from src.modules.bot.parsers.chatbot_parser import string_parser
 from src.modules.bot.prompts.arxiv_topic_prompt import arxiv_topic_prompt
+from src.modules.bot.prompts.background_information_prompt import (
+    background_information_prompt,
+)
 from src.modules.bot.prompts.intent_classifier_prompt import intent_classifier_prompt
 from src.modules.bot.prompts.methodology_guidance_prompt import (
     methodology_guidance_prompt,
@@ -131,6 +134,26 @@ def research_problem_clarification_chain() -> RunnableSerializable:
     )
 
 
+def background_information_chain() -> RunnableSerializable:
+    """Create a chain for the background information intent.
+
+    Returns:
+        RunnableSerializable: Chain for the background information intent.
+    """
+    llm = ChatGroq(model="llama-3.1-70b-versatile", temperature=0.3, stop_sequences=None)
+
+    return (
+        {
+            "message": lambda x: x["message"],
+            "history": lambda x: x["history"],
+            "context": research_topic_chain() | get_research_paper,
+        }
+        | background_information_prompt()
+        | llm
+        | StrOutputParser()
+    )
+
+
 def intent_routing(info: dict) -> RunnableSerializable:
     """Route the intent to the appropriate chain.
 
@@ -147,6 +170,7 @@ def intent_routing(info: dict) -> RunnableSerializable:
         "research_topic": research_topic_chain,
         "methodology_guidance": methodology_guidance_chain,
         "research_problem_clarification": research_problem_clarification_chain,
+        "background_information": background_information_chain,
     }
 
     return intent_map.get(intent, other_chain)()
