@@ -1,16 +1,10 @@
 from langchain_core.prompts import (
     ChatPromptTemplate,
     HumanMessagePromptTemplate,
+    MessagesPlaceholder,
     PromptTemplate,
     SystemMessagePromptTemplate,
 )
-
-# - search_research_paper: User asks to search for a research paper.
-# - summarize_paper: User asks to summarize a research paper.
-# - list_related_papers: User asks for related papers based on user's input.
-# - ask_for_paper_details: User asks for details of a research paper.
-# - discuss_research: User wants to discuss a research paper.
-# - request_full_paper: User asks for the full paper.
 
 intent_classifier_prompt_template = {
     "system": """
@@ -46,6 +40,7 @@ def intent_classifier_prompt() -> ChatPromptTemplate:
             SystemMessagePromptTemplate.from_template(
                 intent_classifier_prompt_template["system"],
             ),
+            MessagesPlaceholder(variable_name="history", n_messages=10),
             HumanMessagePromptTemplate(
                 prompt=PromptTemplate(
                     template=intent_classifier_prompt_template["human"],

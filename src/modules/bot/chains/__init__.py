@@ -48,6 +48,7 @@ def intent_classifier() -> RunnableSerializable:
     return (
         {
             "message": lambda x: x["message"],
+            "history": lambda x: x["history"],
         }
         | intent_classifier_prompt()
         | llm
