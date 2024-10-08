@@ -16,6 +16,9 @@ from src.modules.bot.prompts.research_problem_clarification_prompt import (
     research_problem_clarification_prompt,
 )
 from src.modules.bot.prompts.research_prompt import research_prompt
+from src.modules.bot.prompts.research_proposal_assistance_prompt import (
+    research_proposal_assistance_prompt,
+)
 from src.modules.bot.tools.arxiv_tool import get_research_paper
 
 
@@ -154,6 +157,26 @@ def background_information_chain() -> RunnableSerializable:
     )
 
 
+def research_proposal_assistance_chain() -> RunnableSerializable:
+    """Create a chain for the research proposal assistance intent.
+
+    Returns:
+        RunnableSerializable: Chain for the research proposal assistance intent.
+    """
+    llm = ChatGroq(model="llama-3.1-70b-versatile", temperature=0.3, stop_sequences=None)
+
+    return (
+        {
+            "message": lambda x: x["message"],
+            "history": lambda x: x["history"],
+            "context": research_topic_chain() | get_research_paper,
+        }
+        | research_proposal_assistance_prompt()
+        | llm
+        | StrOutputParser()
+    )
+
+
 def intent_routing(info: dict) -> RunnableSerializable:
     """Route the intent to the appropriate chain.
 
@@ -171,6 +194,7 @@ def intent_routing(info: dict) -> RunnableSerializable:
         "methodology_guidance": methodology_guidance_chain,
         "research_problem_clarification": research_problem_clarification_chain,
         "background_information": background_information_chain,
+        "research_proposal_assistance": research_proposal_assistance_chain,
     }
 
     return intent_map.get(intent, other_chain)()
