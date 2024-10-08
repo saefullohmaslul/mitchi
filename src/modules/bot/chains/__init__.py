@@ -25,6 +25,7 @@ from src.modules.bot.prompts.research_prompt import research_prompt
 from src.modules.bot.prompts.research_proposal_assistance_prompt import (
     research_proposal_assistance_prompt,
 )
+from src.modules.bot.prompts.timeline_planning_prompt import timeline_planning_prompt
 from src.modules.bot.tools.arxiv_tool import get_research_paper
 
 
@@ -223,6 +224,25 @@ def citation_and_referencing_chain() -> RunnableSerializable:
     )
 
 
+def timeline_planning_chain() -> RunnableSerializable:
+    """Create a chain for the timeline planning intent.
+
+    Returns:
+        RunnableSerializable: Chain for the timeline planning intent.
+    """
+    llm = ChatGroq(model="llama-3.1-70b-versatile", temperature=0.3, stop_sequences=None)
+
+    return (
+        {
+            "message": lambda x: x["message"],
+            "history": lambda x: x["history"],
+        }
+        | timeline_planning_prompt()
+        | llm
+        | StrOutputParser()
+    )
+
+
 def intent_routing(info: dict) -> RunnableSerializable:
     """Route the intent to the appropriate chain.
 
@@ -243,6 +263,7 @@ def intent_routing(info: dict) -> RunnableSerializable:
         "research_proposal_assistance": research_proposal_assistance_chain,
         "data_analysis_advice": data_analysis_advice_chain,
         "citation_and_referencing": citation_and_referencing_chain,
+        "timeline_planning": timeline_planning_chain,
     }
 
     return intent_map.get(intent, other_chain)()
