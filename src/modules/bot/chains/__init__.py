@@ -19,6 +19,7 @@ from src.modules.bot.prompts.ethical_considerations_prompt import (
 from src.modules.bot.prompts.general_academic_inquiry_prompt import (
     general_academic_inquiry_prompt,
 )
+from src.modules.bot.prompts.goodbye_prompt import goodbye_prompt
 from src.modules.bot.prompts.greeting_prompt import greeting_prompt
 from src.modules.bot.prompts.intent_classifier_prompt import intent_classifier_prompt
 from src.modules.bot.prompts.methodology_guidance_prompt import (
@@ -308,6 +309,25 @@ def greeting_chain() -> RunnableSerializable:
     )
 
 
+def goodbye_chain() -> RunnableSerializable:
+    """Create a chain for the goodbye intent.
+
+    Returns:
+        RunnableSerializable: Chain for the goodbye intent.
+    """
+    llm = ChatGroq(model="llama-3.1-70b-versatile", temperature=0.3, stop_sequences=None)
+
+    return (
+        {
+            "message": lambda x: x["message"],
+            "history": lambda x: x["history"],
+        }
+        | goodbye_prompt()
+        | llm
+        | StrOutputParser()
+    )
+
+
 def intent_routing(info: dict) -> RunnableSerializable:
     """Route the intent to the appropriate chain.
 
@@ -331,6 +351,8 @@ def intent_routing(info: dict) -> RunnableSerializable:
         "timeline_planning": timeline_planning_chain,
         "ethical_considerations": ethical_considerations_chain,
         "general_academic_inquiry": general_academic_inquiry_chain,
+        "greeting": greeting_chain,
+        "goodbye": goodbye_chain,
     }
 
     return intent_map.get(intent, other_chain)()
