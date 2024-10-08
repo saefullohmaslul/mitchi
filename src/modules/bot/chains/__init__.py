@@ -7,6 +7,9 @@ from src.modules.bot.prompts.arxiv_topic_prompt import arxiv_topic_prompt
 from src.modules.bot.prompts.background_information_prompt import (
     background_information_prompt,
 )
+from src.modules.bot.prompts.data_analysis_advice_prompt import (
+    data_analysis_advice_prompt,
+)
 from src.modules.bot.prompts.intent_classifier_prompt import intent_classifier_prompt
 from src.modules.bot.prompts.methodology_guidance_prompt import (
     methodology_guidance_prompt,
@@ -177,6 +180,26 @@ def research_proposal_assistance_chain() -> RunnableSerializable:
     )
 
 
+def data_analysis_advice_chain() -> RunnableSerializable:
+    """Create a chain for the data analysis advice intent.
+
+    Returns:
+        RunnableSerializable: Chain for the data analysis advice intent.
+    """
+    llm = ChatGroq(model="llama-3.1-70b-versatile", temperature=0.3, stop_sequences=None)
+
+    return (
+        {
+            "message": lambda x: x["message"],
+            "history": lambda x: x["history"],
+            "context": research_topic_chain() | get_research_paper,
+        }
+        | data_analysis_advice_prompt()
+        | llm
+        | StrOutputParser()
+    )
+
+
 def intent_routing(info: dict) -> RunnableSerializable:
     """Route the intent to the appropriate chain.
 
@@ -195,6 +218,7 @@ def intent_routing(info: dict) -> RunnableSerializable:
         "research_problem_clarification": research_problem_clarification_chain,
         "background_information": background_information_chain,
         "research_proposal_assistance": research_proposal_assistance_chain,
+        "data_analysis_advice": data_analysis_advice_chain,
     }
 
     return intent_map.get(intent, other_chain)()
