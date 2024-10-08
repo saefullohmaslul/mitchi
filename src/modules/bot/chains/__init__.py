@@ -125,7 +125,7 @@ def methodology_guidance_chain() -> RunnableSerializable:
         {
             "message": lambda x: x["message"],
             "history": lambda x: x["history"],
-            "context": research_topic_chain() | get_research_paper,
+            "context": arxiv_topic_chain() | get_research_paper,
         }
         | methodology_guidance_prompt()
         | llm
@@ -145,7 +145,7 @@ def research_problem_clarification_chain() -> RunnableSerializable:
         {
             "message": lambda x: x["message"],
             "history": lambda x: x["history"],
-            "context": research_topic_chain() | get_research_paper,
+            "context": arxiv_topic_chain() | get_research_paper,
         }
         | research_problem_clarification_prompt()
         | llm
@@ -165,7 +165,7 @@ def background_information_chain() -> RunnableSerializable:
         {
             "message": lambda x: x["message"],
             "history": lambda x: x["history"],
-            "context": research_topic_chain() | get_research_paper,
+            "context": arxiv_topic_chain() | get_research_paper,
         }
         | background_information_prompt()
         | llm
@@ -185,7 +185,7 @@ def research_proposal_assistance_chain() -> RunnableSerializable:
         {
             "message": lambda x: x["message"],
             "history": lambda x: x["history"],
-            "context": research_topic_chain() | get_research_paper,
+            "context": arxiv_topic_chain() | get_research_paper,
         }
         | research_proposal_assistance_prompt()
         | llm
@@ -205,7 +205,7 @@ def data_analysis_advice_chain() -> RunnableSerializable:
         {
             "message": lambda x: x["message"],
             "history": lambda x: x["history"],
-            "context": research_topic_chain() | get_research_paper,
+            "context": arxiv_topic_chain() | get_research_paper,
         }
         | data_analysis_advice_prompt()
         | llm
@@ -225,7 +225,7 @@ def citation_and_referencing_chain() -> RunnableSerializable:
         {
             "message": lambda x: x["message"],
             "history": lambda x: x["history"],
-            "context": research_topic_chain() | get_research_paper,
+            "context": arxiv_topic_chain() | get_research_paper,
         }
         | citation_and_referencing_prompt()
         | llm
@@ -264,7 +264,7 @@ def ethical_considerations_chain() -> RunnableSerializable:
         {
             "message": lambda x: x["message"],
             "history": lambda x: x["history"],
-            "context": research_topic_chain() | get_research_paper,
+            "context": arxiv_topic_chain() | get_research_paper,
         }
         | ethical_considerations_prompt()
         | llm
