@@ -13,6 +13,9 @@ from src.modules.bot.prompts.citation_and_referencing_prompt import (
 from src.modules.bot.prompts.data_analysis_advice_prompt import (
     data_analysis_advice_prompt,
 )
+from src.modules.bot.prompts.ethical_considerations_prompt import (
+    ethical_considerations_prompt,
+)
 from src.modules.bot.prompts.intent_classifier_prompt import intent_classifier_prompt
 from src.modules.bot.prompts.methodology_guidance_prompt import (
     methodology_guidance_prompt,
@@ -243,6 +246,26 @@ def timeline_planning_chain() -> RunnableSerializable:
     )
 
 
+def ethical_considerations_chain() -> RunnableSerializable:
+    """Create a chain for the ethical considerations intent.
+
+    Returns:
+        RunnableSerializable: Chain for the ethical considerations intent.
+    """
+    llm = ChatGroq(model="llama-3.1-70b-versatile", temperature=0.3, stop_sequences=None)
+
+    return (
+        {
+            "message": lambda x: x["message"],
+            "history": lambda x: x["history"],
+            "context": research_topic_chain() | get_research_paper,
+        }
+        | ethical_considerations_prompt()
+        | llm
+        | StrOutputParser()
+    )
+
+
 def intent_routing(info: dict) -> RunnableSerializable:
     """Route the intent to the appropriate chain.
 
@@ -264,6 +287,7 @@ def intent_routing(info: dict) -> RunnableSerializable:
         "data_analysis_advice": data_analysis_advice_chain,
         "citation_and_referencing": citation_and_referencing_chain,
         "timeline_planning": timeline_planning_chain,
+        "ethical_considerations": ethical_considerations_chain,
     }
 
     return intent_map.get(intent, other_chain)()
